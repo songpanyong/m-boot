@@ -1,0 +1,36 @@
+SELECT CONCAT(
+	CONCAT("HMSET m:i:p:", investorOid, ":", productOid),
+	' oid ', oid,
+	IFNULL(CONCAT(' productOid ', productOid), ''),
+	IFNULL(CONCAT(' investorOid ', investorOid), ''),
+	IFNULL(CONCAT(' totalVolume ', TRUNCATE(totalVolume*10000, 0)), ''),
+	IFNULL(CONCAT(' holdVolume ',  TRUNCATE(holdVolume*10000, 0)), ''),
+	IFNULL(CONCAT(' toConfirmInvestVolume ',  TRUNCATE(toConfirmInvestVolume*10000, 0)), ''),
+	IFNULL(CONCAT(' toConfirmRedeemVolume ',  TRUNCATE(toConfirmRedeemVolume*10000, 0)), ''),
+	IFNULL(CONCAT(' totalInvestVolume ',  TRUNCATE(totalInvestVolume*10000, 0)), ''),
+	IFNULL(CONCAT(' totalVoucherAmount ',  TRUNCATE(totalVoucherAmount*10000, 0)), ''),
+	IFNULL(CONCAT(' lockRedeemHoldVolume ',  TRUNCATE(lockRedeemHoldVolume*10000, 0)), ''),
+	IFNULL(CONCAT(' redeemableHoldVolume ',  TRUNCATE(redeemableHoldVolume*10000, 0)), ''),
+	IFNULL(CONCAT(' accruableHoldVolume ',  TRUNCATE(accruableHoldVolume*10000, 0)), ''),
+	IFNULL(CONCAT(' value ',  TRUNCATE(VALUE*10000, 0)), ''),
+	IFNULL(CONCAT(' expGoldVolume ',  TRUNCATE(expGoldVolume * 10000, 0)), ''),
+	IFNULL(CONCAT(' holdTotalIncome ',  TRUNCATE(holdTotalIncome * 10000, 0)), ''),
+	IFNULL(CONCAT(' holdYesterdayIncome ',  TRUNCATE(holdYesterdayIncome * 10000, 0)), ''),
+	IFNULL(CONCAT(' incomeDate ',  '"', confirmDate, '"'), ''),
+	IFNULL(CONCAT(' expectIncomeExt ',  TRUNCATE(expectIncomeExt * 10000, 0)), ''),
+	IFNULL(CONCAT(' expectIncome ',  TRUNCATE(expectIncome * 10000, 0)), ''),
+	IFNULL(CONCAT(' dayRedeemVolume ',  TRUNCATE(dayRedeemVolume*10000, 0)), ''),
+	IFNULL(CONCAT(' dayInvestVolume ',  TRUNCATE(dayInvestVolume*10000, 0)), ''),
+	IFNULL(CONCAT(' dayRedeemCount ',  dayRedeemCount), ''),
+	IFNULL(CONCAT(' maxHoldVolume ',  TRUNCATE(maxHoldVolume*10000, 0)), ''),
+	IFNULL(CONCAT(' holdStatus ', '"', holdStatus, '"'), ''),
+	IFNULL(CONCAT(' latestOrderTime ',  '"', latestOrderTime, '"'), ''),
+	'\n',
+	CONCAT('HMSET m:i:ap:', investorOid, ':', assetpoolOid, 
+	' ', productOid, ' ', truncate(maxHoldVolume*10000, 0)),
+	'\n',
+	CONCAT('zadd m:h:i:', investorOid, ' ', UNIX_TIMESTAMP(createTime), ' ', productOid)
+)
+FROM t_money_publisher_hold 
+WHERE accountType='INVESTOR' and (oid in ('#oids')  or '#xoids'='x');
+

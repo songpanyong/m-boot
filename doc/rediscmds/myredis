@@ -1,0 +1,4 @@
+#!/bin/sh
+
+redis-cli -p 6379 -h 114.215.133.84 -a guohuaiGUO4056 $*
+
